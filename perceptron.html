@@ -1,0 +1,64 @@
+<h1>Perceptrons</h1>
+<p>This assignment is EXTRA CREDIT, it is not required, but it may help
+solidify your understanding of neural networks.</p>
+<p>The goal of this assignment is to implement the perceptron training rule to
+train the simplest possible neural network.  The approach that I've
+sketched out is similar to the way tensorflow works, although
+here applied only to a single neuron.</p>
+<h1>Overview</h1>
+<ol>
+<li>Download the stub <code>perceptron.py</code>.</li>
+<li>Look through the code.  I've written some functionality,
+   and the goal is for you to complete it.</li>
+<li>As before the code assumes four spaces of indentation.
+   Set your editor appropriately, this is the default for many.</li>
+</ol>
+<h1>Perceptron Basics</h1>
+<p>As described in class, the perceptron is a single neuron that
+takes weighted inputs and subjects them to an activation function.
+The resulting value is known as the output. In a perceptron, the
+output is used as the "network's" result, but in more complex
+neural networks neurons are connected together so one neuron's output
+may be another neuron's input.</p>
+<p>In this assignment, we relegate ourselves to the perceptron. Input
+comes directly from the data file, which is stored as a CSV. Each
+row in the X_train.csv file corresponds to an "example" while each
+row in the Y_train.csv file corresponds to the label (for the
+corresponding row in the X_train.csv). </p>
+<p>The perceptron takes an example (e.g., a row from the X_train.csv file)
+and uses these as the inputs to the neuron. Example data is multiplied
+by the weights for each incoming link, and then summed along with the bias
+before being passed to the activation function (in my code, a sigmoid is used).</p>
+<p>During training, a batch of data (some subset of the training set) is given
+to the neuron. Predictions for each example are made and compared against
+the true labels. Next, a loss function is computed using both the predictions
+and the true labels. As the predictions get better, the loss goes down.  The
+loss used in this implementation is 1/2 the squared difference. Finally, we
+compute the gradient of the loss function with respect to the inputs
+and adjust the weights of the network.</p>
+<p>Adjustment happens after each batch.  The larger the batch, the better the estimate
+of the gradient (i.e., we are more likely to adjust the weights in the correct
+direction), the smaller the batch, the quicker we get to the adjusting, but we
+are likely to make more erratic steps (since our direction will have a lot of
+variance). An epoch occurs when we have run enough batches to cycle through all
+the data instances once.  Typically, more than one epoch is needed, often much more.</p>
+<p>It's typically important that input data is normalized for many learning algorithms,
+neural networks included.  I have done this step for you.</p>
+<p>If successfully implemented, you should be able to obtain ~90% accuracy on the training
+and test data.  </p>
+<h1>Command Line Invocation</h1>
+<p>Usage instructions are given when you invoke the function at the command line
+with no arguments:</p>
+<blockquote>
+<p>python perceptron.py --help
+    usage: perceptron.py [-h] [--batches BATCHES] </p>
+</blockquote>
+<pre><code>optional arguments:
+  -h, --help         show this help message and exit
+  --batches BATCHES  number of batches per epoch
+</code></pre>
+<h1>Turn in your code</h1>
+<p>Submit your code via Autolab. Current tests are non-existent. But, if your implementation is correct
+you should be able to obtain roughly 90% accuracy and a loss of ~41ish.</p>
+<p>Don't forget, this is extra credit! ;)</p>
+<p>https://autolab.encs.vancouver.wsu.edu</p>
