@@ -59,13 +59,16 @@ class Neuron():
         return the result of the sigmoid activation function from the input_values 
         and the weights (don't forget the bias!). This is a scalar value."""
 
-        # summing input values * weights (finding x)
+        # summing input values * weights (finding x) for all input values
         x = 0
         for i, inval in enumerate(input_values):
             weighted_input = inval * self.weights[i]
             x += weighted_input
+        # Remembering the bias!
+        x += self.weights[-1]
         #  Finishing sigmoid calculation
         final_val = 1 / (1+math.e**(-x))
+
         return final_val
 
     def weight_string(self, fmt="%.3f  "):
