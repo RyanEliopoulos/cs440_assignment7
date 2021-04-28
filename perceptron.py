@@ -68,7 +68,6 @@ class Neuron():
         x += self.weights[-1]
         #  Finishing sigmoid calculation
         final_val = 1 / (1+math.e**(-x))
-
         return final_val
 
     def weight_string(self, fmt="%.3f  "):
@@ -96,8 +95,7 @@ class Neuron():
         # from the slides error: y - g(in)
         # y is 
         # loss is .5 * error
-        return sum( .5*(y-g)**2 for (y,g) in zip(batchY, g_in))
-
+        return sum(.5*(y-g)**2 for (y,g) in zip(batchY, g_in))
 
     def accuracy(self, batchX, batchY):
         """__ Part 2: Implement this __
@@ -111,8 +109,30 @@ class Neuron():
         return the prediction accuracy on this data
         """
 
-        pass
-        
+        true_pos = 0
+        true_neg = 0
+        false_pos = 0
+        false_neg = 0
+
+        for i, test_case in enumerate(batchX):
+            # Rounding activation function to 0 or 1
+            neuron_decision = self.sigmoid(test_case)
+            neuron_decision = 1 if neuron_decision >= .5 else 0
+
+            if neuron_decision == 1:
+                if neuron_decision == batchY[i]:
+                    true_pos += 1
+                else:
+                    false_pos += 1
+            elif neuron_decision == 0:
+                if neuron_decision == batchY[i]:
+                    true_neg += 1
+                else:
+                    false_neg += 1
+
+        accuracy = (true_pos+true_neg) / (true_pos+true_neg+false_pos+false_neg)
+        return accuracy
+
     def gradient(self, batchX, batchY):
         """The formula for the gradient is determined 
         by the loss function and the activation function. 
@@ -143,17 +163,19 @@ class Neuron():
 
         Perform gradient descent by:
         (1) calculating the gradient on the labled batch of data
-        (2) update the weights by subtracting the 
+        (2) update the weights by subtracting the
             learning rate * the gradient
 
         updates the weights of the perceptrons, but returns nothing
         """
-        pass
+        dw = self.gradient(batchX, batchY)
+        for i, dweight in enumerate(dw):
+            self.weights[i] -= dweight * lr
 
 
 def stop(epochs, loss, losses):
     """__ Part 4: Implement this __
-    
+
     This isn't a great stopping criterion,
     can you improve it?
 
@@ -164,15 +186,19 @@ def stop(epochs, loss, losses):
 
     returns True iff it's a good time to stop learning
     """
-    pass
+    if len(losses) < 2:
+        return False
+
+    if abs(losses[-1] - losses[-2]) < .01:
+        return True
 
 
 def train(trainX, trainY, testX, testY, batches_per=1, stoppingfn=stop):
     """Train a perceptron on the training data, and test it on the testing
-    data.  Report loss and accuracy.  Gradient descent occurs after each 
-    batch. After each epoch, stats are reported and stopping criteria is 
+    data.  Report loss and accuracy.  Gradient descent occurs after each
+    batch. After each epoch, stats are reported and stopping criteria is
     checked."""
-    
+
     t = Timer()
     neuron = Neuron(10)
     last = time.time()
@@ -193,7 +219,7 @@ def train(trainX, trainY, testX, testY, batches_per=1, stoppingfn=stop):
         losses.append(loss)
         print("Epoch %d Loss: %f %.2f sec"%(epochs, loss, t.stop()))
         print("   Weights: ", neuron.weight_string())
-        
+
     print("Losses:")
     for l in losses:
         print("%.3f"%l)
